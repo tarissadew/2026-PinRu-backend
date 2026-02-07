@@ -1,0 +1,27 @@
+# Folder hasil kompilasi
+bin/
+obj/
+
+# File konfigurasi lokal dan rahasia
+.env
+*.user
+*.userosscache
+*.sln.docstates
+
+# Folder User Secrets
+# (Penting untuk keamanan data sensitif)
+**/Properties/launchSettings.json
+
+# File sampah Visual Studio / VS Code
+.vs/
+.vscode/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# File Log
+*.log
+
+# Folder paket library (NuGet)
+packages/
