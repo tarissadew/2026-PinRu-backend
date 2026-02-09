@@ -1,16 +1,26 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace _2026_PinRu_backend.DTOs 
 {
-    // DTO untuk input (Request) dari pengguna saat Create atau Update
+    // 1. DTO untuk input (Request)
     public class CustomerRequestDto
     {
+        [Required(ErrorMessage = "Nama wajib diisi")] 
+        [StringLength(100)]
         public string Name { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "Email wajib diisi")]
+        [EmailAddress(ErrorMessage = "Format email salah")]
         public string Email { get; set; } = string.Empty;
+
         public string? Phone { get; set; }
         public string? Address { get; set; }
+        
+        [RegularExpression("^(Active|Inactive)$", ErrorMessage = "Status hanya boleh Active atau Inactive")]
         public string Status { get; set; } = "Active";
     }
 
-    // DTO untuk output (Response) yang dikirim ke pengguna
+    // 2. DTO untuk output (Response) - Berada di file yang sama
     public class CustomerResponseDto
     {
         public int Id { get; set; }
