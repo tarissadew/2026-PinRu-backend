@@ -1,27 +1,19 @@
-# Folder hasil kompilasi
+# Folder hasil kompilasi (Wajib di-ignore)
 bin/
 obj/
 
-# File konfigurasi lokal dan rahasia
+# File konfigurasi rahasia
 .env
-*.user
-*.userosscache
-*.sln.docstates
+.env.local
 
-# Folder User Secrets
-# (Penting untuk keamanan data sensitif)
-**/Properties/launchSettings.json
-
-# File sampah Visual Studio / VS Code
-.vs/
+# File sampah Visual Studio Code
 .vscode/
-*.suo
-*.user
-*.userosscache
-*.sln.docstates
+.vs/
 
-# File Log
-*.log
+# NuGet Packages
+*.nupkg
+**/packages/
 
-# Folder paket library (NuGet)
-packages/
+# File yang SEBAIKNYA TIDAK di-ignore untuk proyek baru
+# Jangan meng-ignore launchSettings.json jika Anda bekerja sendiri/awal
+# Karena VS Code membutuhkannya untuk mengenali profil pengerjaan.
