@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace YourProjectName.Models
+namespace _2026_PinRu_backend.Models
 {
     public class Customer
     {
@@ -19,11 +19,11 @@ namespace YourProjectName.Models
 
         public string? Address { get; set; }
 
-        public string Status { get; set; } = "Active"; // Active/Inactive
+        public string Status { get; set; } = "Active";
 
-        public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
+        // Menggunakan DateTimeKind.Utc secara eksplisit agar sinkron dengan PostgreSQL
+        public DateTime CreatedDate { get; set; } = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Utc);
 
-        // Untuk Soft Delete (Opsional sesuai Task 9)
         public bool IsDeleted { get; set; } = false;
     }
 }
