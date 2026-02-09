@@ -1,0 +1,6 @@
+@_2026_PinRu_backend_HostAddress = http://localhost:5082
+
+GET {{_2026_PinRu_backend_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
