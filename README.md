@@ -15,7 +15,7 @@ Sistem backend untuk layanan PinRu yang mengelola data customer dengan fitur CRU
 2. **Konfigurasi Database** 🗄️:
    Buka `appsettings.json` dan sesuaikan `ConnectionStrings`:
    ```json
-   "DefaultConnection": "Host=localhost;Database=PinRuDB;Username=postgres;Password=your_password"
+   "DefaultConnection": "Host=localhost;Database=PinRuDB;Username=postgres;Password=postgresql"
 
 ## 🚀 Panduan Menjalankan Proyek
 
