@@ -1,12 +1,20 @@
 using Microsoft.EntityFrameworkCore;
 using _2026_PinRu_backend.Data;
-using _2026_PinRu_backend.Models; // Pastikan folder sudah kamu rename jadi Entities
+using _2026_PinRu_backend.Models; 
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Ganti ke PostgreSQL sesuai kebutuhan tugas (Task 6)
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+// 2. KONFIGURASI CORS: Mengizinkan Frontend (port 5173) mengakses API
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend",
+        policy => policy.WithOrigins("http://localhost:5173") // Alamat frontend kamu
+                        .AllowAnyMethod()
+                        .AllowAnyHeader());
+});
 
 builder.Services.AddControllers();
 
