@@ -58,7 +58,6 @@ namespace _2026_PinRu_backend.Controllers
                 CustomerId = request.CustomerId,
                 RoomId = request.RoomId,
                 BookingDate = DateTime.UtcNow,
-                // Memastikan waktu disimpan sebagai UTC agar PostgreSQL tidak error
                 StartTime = DateTime.SpecifyKind(request.StartTime, DateTimeKind.Utc),
                 EndTime = DateTime.SpecifyKind(request.EndTime, DateTimeKind.Utc),
                 Remarks = request.Remarks,
@@ -68,30 +67,10 @@ namespace _2026_PinRu_backend.Controllers
             _context.Bookings.Add(booking);
             await _context.SaveChangesAsync();
 
-            // Menggunakan nameof(GetBookings) agar tidak error CS0103 lagi
             return CreatedAtAction(nameof(GetBookings), new { id = booking.Id }, booking);
         }
 
-        // 3. Mengubah status peminjaman (Task 2.2)
-        [HttpPatch("{id}/status")]
-        public async Task<IActionResult> UpdateStatus(int id, [FromBody] string newStatus)
-        {
-            var booking = await _context.Bookings.FindAsync(id);
-            if (booking == null) return NotFound();
-
-            var validStatuses = new[] { "Pending", "Approved", "Rejected" };
-            if (!validStatuses.Contains(newStatus))
-            {
-                return BadRequest("Status tidak valid.");
-            }
-
-            booking.Status = newStatus;
-            await _context.SaveChangesAsync();
-
-            return Ok(new { message = $"Status peminjaman berhasil diubah menjadi {newStatus}" });
-        }
-
-        // 4. Menghapus data peminjaman (Task 1.4)
+        // 3. Menghapus data peminjaman (Task 1.4)
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteBooking(int id)
         {
@@ -103,5 +82,29 @@ namespace _2026_PinRu_backend.Controllers
 
             return NoContent();
         }
+
+        // 4. Update Status (Task 6: Approve/Reject)
+        [HttpPatch("{id}/status")]
+        public async Task<IActionResult> UpdateStatus(int id, [FromBody] UpdateStatusDto dto)
+        {
+            var booking = await _context.Bookings.FindAsync(id);
+            if (booking == null) return NotFound();
+
+            var validStatuses = new[] { "Pending", "Approved", "Rejected" };
+            if (!validStatuses.Contains(dto.Status))
+            {
+                return BadRequest("Status tidak valid.");
+            }
+
+            booking.Status = dto.Status;
+            await _context.SaveChangesAsync();
+
+            return Ok(new { message = $"Status peminjaman berhasil diubah menjadi {dto.Status}" });
+        }
+    }
+
+    public class UpdateStatusDto
+    {
+        public string Status { get; set; } = string.Empty;
     }
 }
