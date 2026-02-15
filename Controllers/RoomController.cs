@@ -5,7 +5,7 @@ using _2026_PinRu_backend.Models;
 
 namespace _2026_PinRu_backend.Controllers
 {
-    [Route("api/[controller]")] // Ini akan membuat URL menjadi: api/Room
+    [Route("api/Room")]
     [ApiController]
     public class RoomController : ControllerBase
     {
@@ -16,14 +16,12 @@ namespace _2026_PinRu_backend.Controllers
             _context = context;
         }
 
-        // Endpoint untuk mengambil semua data ruangan
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Room>>> GetRooms()
         {
             return await _context.Rooms.ToListAsync();
         }
 
-        // Endpoint untuk menambah ruangan (Solusi pesan Gagal Menambah Ruangan)
         [HttpPost]
         public async Task<ActionResult<Room>> PostRoom([FromBody] Room room)
         {
@@ -32,6 +30,21 @@ namespace _2026_PinRu_backend.Controllers
             _context.Rooms.Add(room);
             await _context.SaveChangesAsync();
             return Ok(room);
+        }
+
+        [HttpDelete("/api/Room/{id}")]
+        public async Task<IActionResult> DeleteRoom([FromRoute] int id)
+        {
+            var room = await _context.Rooms.FindAsync(id);
+            if (room == null)
+            {
+                return NotFound();
+            }
+
+            _context.Rooms.Remove(room);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
         }
     }
 }
