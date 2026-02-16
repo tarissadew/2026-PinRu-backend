@@ -10,6 +10,7 @@ namespace _2026_PinRu_backend.Data
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Room> Rooms { get; set; }
         public DbSet<Booking> Bookings { get; set; }
+        public DbSet<User> Users { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -33,18 +34,24 @@ namespace _2026_PinRu_backend.Data
 
             // 3. Tambahkan Seeder Booking (Data transaksi awal untuk testing)
             modelBuilder.Entity<Booking>().HasData(
-                new Booking 
-                { 
-                    Id = 1, 
-                    CustomerId = 1, 
-                    RoomId = 1, 
-                    BookingDate = seedDate, 
-                    StartTime = seedDate.AddHours(9), 
-                    EndTime = seedDate.AddHours(11), 
-                    Status = "Approved", 
-                    CreatedAt = seedDate 
+                new Booking
+                {
+                    Id = 1,
+                    CustomerId = 1,
+                    RoomId = 1,
+                    BookingDate = seedDate,
+                    StartTime = seedDate.AddHours(9),
+                    EndTime = seedDate.AddHours(11),
+                    Status = "Approved",
+                    CreatedAt = seedDate
                 }
             );
+
+            // 4.  Seeder User
+            modelBuilder.Entity<User>().HasData(
+            new User { Id = 1, Username = "admin", Password = "123", FullName = "Admin PinRu", Role = "Admin" },
+            new User { Id = 2, Username = "tarissa", Password = "123", FullName = "Tarissa", Role = "Mahasiswa" }
+        );
         }
     }
 }
