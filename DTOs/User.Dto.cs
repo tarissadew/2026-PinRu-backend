@@ -14,7 +14,9 @@ namespace _2026_PinRu_backend.DTOs
         [Required(ErrorMessage = "Nama Lengkap wajib diisi")]
         public string FullName { get; set; } = string.Empty;
 
-        public string Role { get; set; } = "Mahasiswa"; 
+        public string Email { get; set; } = string.Empty;
+
+        public string Role { get; set; } = "Mahasiswa";
     }
 
     public class UserLoginDto
@@ -31,6 +33,7 @@ namespace _2026_PinRu_backend.DTOs
         public int Id { get; set; }
         public string Username { get; set; } = string.Empty;
         public string FullName { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
         public string Role { get; set; } = string.Empty;
     }
 }
