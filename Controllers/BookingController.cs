@@ -17,12 +17,12 @@ namespace _2026_PinRu_backend.Controllers
             _context = context;
         }
 
-        // 1. Menampilkan daftar peminjaman (Task 3.1 & 3.2)
+        // 1. Ambil daftar peminjaman (Task 3)
         [HttpGet]
         public async Task<ActionResult<IEnumerable<BookingResponseDto>>> GetBookings([FromQuery] string? status)
         {
             var query = _context.Bookings
-                .Include(b => b.Customer)
+                .Include(b => b.User) // Ganti dari Customer ke User
                 .Include(b => b.Room)
                 .AsQueryable();
 
@@ -34,7 +34,8 @@ namespace _2026_PinRu_backend.Controllers
             var bookings = await query.Select(b => new BookingResponseDto
             {
                 Id = b.Id,
-                CustomerName = b.Customer != null ? b.Customer.Name : "Unknown",
+                // Mengambil nama dari tabel User
+                CustomerName = b.User != null ? b.User.FullName : "Unknown", 
                 RoomName = b.Room != null ? b.Room.Name : "Unknown",
                 StartTime = b.StartTime,
                 EndTime = b.EndTime,
@@ -44,7 +45,7 @@ namespace _2026_PinRu_backend.Controllers
             return Ok(bookings);
         }
 
-        // 2. Menambah data peminjaman (Task 1.1)
+        // 2. Tambah data peminjaman (Task 8 & 10)
         [HttpPost]
         public async Task<ActionResult<Booking>> CreateBooking(BookingRequestDto request)
         {
@@ -53,10 +54,21 @@ namespace _2026_PinRu_backend.Controllers
                 return BadRequest("Waktu mulai harus sebelum waktu selesai.");
             }
 
+            // Mencari objek User dan Room agar syarat 'required' terpenuhi
+            var user = await _context.Users.FindAsync(request.UserId);
+            var room = await _context.Rooms.FindAsync(request.RoomId);
+
+            if (user == null || room == null)
+            {
+                return BadRequest("User atau Ruangan tidak ditemukan.");
+            }
+
             var booking = new Booking
             {
-                CustomerId = request.CustomerId,
+                UserId = request.UserId, // Menggunakan UserId
                 RoomId = request.RoomId,
+                User = user, // Mengisi required member agar tidak error CS9035
+                Room = room,
                 BookingDate = DateTime.UtcNow,
                 StartTime = DateTime.SpecifyKind(request.StartTime, DateTimeKind.Utc),
                 EndTime = DateTime.SpecifyKind(request.EndTime, DateTimeKind.Utc),
@@ -67,10 +79,10 @@ namespace _2026_PinRu_backend.Controllers
             _context.Bookings.Add(booking);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetBookings), new { id = booking.Id }, booking);
+            return Ok(booking);
         }
 
-        // 3. Menghapus data peminjaman (Task 1.4)
+        // 3. Hapus data peminjaman
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteBooking(int id)
         {
@@ -83,7 +95,7 @@ namespace _2026_PinRu_backend.Controllers
             return NoContent();
         }
 
-        // 4. Update Status (Task 6: Approve/Reject)
+        // 4. Update Status (Approve/Reject)
         [HttpPatch("{id}/status")]
         public async Task<IActionResult> UpdateStatus(int id, [FromBody] UpdateStatusDto dto)
         {
@@ -101,10 +113,5 @@ namespace _2026_PinRu_backend.Controllers
 
             return Ok(new { message = $"Status peminjaman berhasil diubah menjadi {dto.Status}" });
         }
-    }
-
-    public class UpdateStatusDto
-    {
-        public string Status { get; set; } = string.Empty;
     }
 }
