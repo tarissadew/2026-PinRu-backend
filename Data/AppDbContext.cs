@@ -7,7 +7,6 @@ namespace _2026_PinRu_backend.Data
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
-        public DbSet<Customer> Customers { get; set; } 
         public DbSet<Room> Rooms { get; set; }
         public DbSet<Booking> Bookings { get; set; }
         public DbSet<User> Users { get; set; }
